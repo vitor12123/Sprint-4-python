@@ -53,28 +53,6 @@ def login_admin():
         print("❌ Usuário ou senha incorretos.")
         return False
 
-<<<<<<< HEAD
-# Função de cadastro de jogadora
-def cadastrar_jogadora():
-    global df_jogadoras
-    nome = input("Crie um nome de usuário: ").strip()
-    if nome in df_jogadoras['nome'].values:
-        print("Nome de usuário já existe!")
-        return
-    senha = input("Crie uma senha (min. 4 caracteres): ").strip()
-    if len(senha) < 4:
-        print("Senha muito curta!")
-        return
-    cpf = input("Digite seu CPF: ").strip()
-    idade = int(input("Digite sua idade: "))
-    if idade < 18:
-        print("Você precisa ter 18 anos ou mais!")
-        return
-    # Adiciona jogadora
-    df_jogadoras.loc[len(df_jogadoras)] = [nome, senha, cpf, idade]
-    df_jogadoras.to_csv(CAMINHO_JOGADORAS, index=False)
-    print("Cadastro realizado com sucesso!")
-=======
 #menu dos admins
 def menu() :
     opcoes = {
@@ -88,7 +66,6 @@ def menu() :
         times()
     if opcoes['botaoSair'] == 's' and loginAdmfeito == True:
         sair()
->>>>>>> 49d9f8fddd0b459f1a4f38bc0ab2508e12db6c27
 
 # Menu do administrador
 def menu_admin():
@@ -110,19 +87,6 @@ def menu_admin():
         else:
             print("Opção inválida!")
 
-<<<<<<< HEAD
-# Função criar campeonato
-def criar_campeonato():
-    global df_jogos
-    nome = input("Nome do campeonato: ").strip()
-    data = input("Data (DD/MM/AAAA): ").strip()
-    horario = input("Horário: ").strip()
-    local = input("Local: ").strip()
-    # Adiciona linha com todas as colunas
-    df_jogos.loc[len(df_jogos)] = [nome, data, horario, local, "", ""]
-    df_jogos.to_csv(CAMINHO_JOGOS, index=False)
-    print("Campeonato criado!")
-=======
 #cadastro de times para um campeonato
 def times(): 
     #o campeonato ja precisa existir
@@ -146,7 +110,6 @@ def times():
     
 def sair():
     pass
->>>>>>> 49d9f8fddd0b459f1a4f38bc0ab2508e12db6c27
 
 # Função cadastrar times
 def cadastrar_times():
