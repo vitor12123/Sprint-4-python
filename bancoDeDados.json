@@ -1,0 +1,25 @@
+{
+"bancoDeDados": {
+    "login" : {
+            "adm": {
+                "passa a bola": "senha123",
+                "dev": "senhaDev"
+
+                }, 
+            "jogadoras": {
+                "juliana": "12345"
+                }
+            },
+    "jogos": {
+        "copinha SP" :{
+        "info":["22/02/2026","14h","av paulista 1110"],
+        "itaipava do sul":["jogadora1","jogadora1","jogadora1","jogadora1","jogadora1","jogadora1","jogadora1","jogadora1","jogadora1","jogadora1","jogadora1"],
+        "granja viana": ["jogadora2","jogadora2","jogadora2","jogadora2","jogadora2","jogadora2","jogadora2","jogadora2","jogadora2","jogadora2","jogadora2"]
+            }
+        },
+    "time": {
+    
+        }   
+    
+    }
+}

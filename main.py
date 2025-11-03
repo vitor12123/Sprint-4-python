@@ -1,22 +1,15 @@
 import pandas as pd 
+import json
 
-loginAdm = {
-    'passaABola':['passa a bola','12345'],
-    'vitor': ['vitor','160507']
-}
-loginJogadora = {
-    'thais carla': (['thais carla','Mrbuchecha'],['546595945822','thais carla',20]),
-}
-jogos = {
-    'copinha SP' :{
-        'info':['22/02/2026','14h','av paulista 1110'],
-        'itaipava do sul':['jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1'],
-        'granja viana': ['jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2']
-        }
-}
-time = {
-      
-}
+with open("bancoDeDados.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+
+df = pd.read_json("bancDeDados.json")
+
+loginAdm = data["bancoDeDados"]["login"]["adm"]
+loginJogadora = data["bancoDeDados"]["login"]["jogadoras"]
+time = data["bancoDeDados"]["time"]
+jogos = data["bancoDeDados"]["jogos"]
 
 loginAdmfeito = False
 verificacaoCadastro = False
