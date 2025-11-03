@@ -1,148 +1,155 @@
-import pandas as pd 
+import pandas as pd
+import os
 
-loginAdm = {
-    'passaABola':['passa a bola','12345'],
-    'vitor': ['vitor','160507']
-}
-loginJogadora = {
-    'thais carla': (['thais carla','Mrbuchecha'],['546595945822','thais carla',20]),
-}
-jogos = {
-    'copinha SP' :{
-        'info':['22/02/2026','14h','av paulista 1110'],
-        'itaipava do sul':['jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1','jogadora1'],
-        'granja viana': ['jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2','jogadora2']
-        }
-}
-time = {
-      
-}
+# Caminhos dos arquivos CSV
+CAMINHO_JOGADORAS = "jogadoras.csv"
+CAMINHO_ADMS = "admins.csv"
+CAMINHO_JOGOS = "jogos.csv"
 
-loginAdmfeito = False
-verificacaoCadastro = False
-loginJogadorafeito = False
+# Carregar dados ou criar caso não exista
+def carregar_csv(caminho, colunas):
+    if os.path.exists(caminho):
+        df = pd.read_csv(caminho, index_col=0)
+        # Garantir que todas as colunas existam
+        for col in colunas:
+            if col not in df.columns:
+                df[col] = ""
+        return df
+    else:
+        return pd.DataFrame(columns=colunas)
 
-verificacao = input("Ja tem conta(responda com S/n): ")
+# Inicializando dados
+df_jogadoras = carregar_csv(CAMINHO_JOGADORAS, ["nome", "senha", "cpf", "idade"])
+df_admins = carregar_csv(CAMINHO_ADMS, ["nome", "senha"])
+df_jogos = carregar_csv(CAMINHO_JOGOS, ["campeonato", "data", "horario", "local", "times", "placar"])
 
-# Sistema de login
-def login() :
-    for i in range(4):
-        if verificacao.lower() == "s" : 
-            tipoConta = input('vai entrar como jogadora ou como admin: ')
-            # login para jogadoras
-            if tipoConta == 'jogadora': 
-                nomeJogador = input('digite seu nome de usuario: ').strip()
-                senhaJogador = input('digite sua senha: ')
-                if [nomeJogador,senhaJogador] in loginJogadora.values() :
-                    print(f'seja bem vinda {nomeJogador}')
-                    global loginJogadorafeito
-                    loginJogadorafeito = True
-                # recuperação de senha
-                elif i == 3 :
-                    recuperacaoSenha = input('voce esqueceu a senha?(S/n) ')
-                    if recuperacaoSenha.lower() == 's':
-                        identificacao = input('digite seu nome: ')
-                        confimacao = input('digite seu cpf:')
-                        if identificacao in loginJogadora.keys() and confimacao == loginJogadora[identificacao][2][0]:
-                            novaSenha = input('digite sua senha nova: ')
-                            loginJogadora[identificacao][1] = novaSenha
-                        else:
-                            print('CPF incorreto ou voce nao tem conta.')
-                elif i == 4 :
-                    print('numero maximo de tentativas, tente novamente mais tarde')     
+# Exemplo de admins iniciais
+if df_admins.empty:
+    df_admins = pd.DataFrame([["adm","senha"], ["vitor","160507"]], columns=["nome","senha"])
+    df_admins.to_csv(CAMINHO_ADMS)
 
-            #login caso for administrador
-            if tipoConta == 'admin':
-                for i in range(4):
-                    nomeAdm = input('digite seu nome de usuario: ').strip()
-                    senhaAdm = input('digite sua senha: ')
-                    if [nomeAdm, senhaAdm] in loginAdm.values():
-                        print(f'Seja bem vinda {nomeAdm}')
-                        global loginAdmfeito
-                        loginAdmfeito = True
-                        return verificacaoAdm()
-                    elif i == 3:
-                        print('Passou do numero maximo de tentativas, tente mais tarde.')
-                        break
-                    if nomeAdm not in loginAdm or senhaAdm in loginAdm and i < 3:
-                        print('nome de usuario ou senha errados, tente novamente.')
-        # cadastro de jogadoras
-        elif verificacao.lower() == 'n' :
-            visitante = input('voce quer criar uma conta(S/n): ')
-            if visitante.lower() == 's':
-                while verificacaoCadastro == False :
-                    cadastroCpf = int(input('digite seu CPF(sem espaços): '))
-                    cadastroNome = input('crie um nome de usuario: ')
-                    cadastroIdade = int(input('digite quantos anos voce tem(digite apenas o numero): '))
-                    cadastroSenha = input('crie sua senha (pelo menos 4 caracteres): ')
-                    #validação de CPF, idade e senha dentro dos padroes de segurança da minha cabeça
-                    if len(cadastroCpf) < 11 or cadastroIdade < 18 or len(cadastroSenha) < 4 :
-                        print('algo deu errado no seu cadastro, tente novamente.')
-                    elif cadastroNome in loginJogadora.keys(): 
-                        print('o seu nome de usuario ja esta sendo usado.')
-                    else :
-                        loginJogadora[cadastroNome] = ([cadastroNome, cadastroSenha],[cadastroCpf,cadastroNome,cadastroIdade])
-                        verificacaoCadastro = True
-            else :
-                break
+# Função de login de jogadora
+def login_jogadora():
+    nome = input("Nome da jogadora: ").strip()
+    senha = input("Senha: ").strip()
+    jogador = df_jogadoras[(df_jogadoras['nome'] == nome) & (df_jogadoras['senha'] == senha)]
+    if not jogador.empty:
+        print(f"Seja bem-vinda {nome}")
+        return True
+    else:
+        print("❌ Usuário ou senha incorretos.")
+        return False
 
-# pagina exclusiva para admins
-def verificacaoAdm():
-    if loginAdmfeito == True:
-        return menu()
+# Função de login de administrador
+def login_admin():
+    nome = input("Usuário ADM: ").strip()
+    senha = input("Senha: ").strip()
+    admin = df_admins[(df_admins['nome'] == nome) & (df_admins['senha'] == senha)]
+    if not admin.empty:
+        print(f"Seja bem-vinda {nome}")
+        menu_admin()
+        return True
+    else:
+        print("❌ Usuário ou senha incorretos.")
+        return False
 
-#menu dos admins
-def menu() :
-    opcoes = {
-        'camp': input('quer criar um campeonato? '),
-        'cadastro times' : input('cadastrar times para um jogo? '),
-        'placar jogo': input('você quer lançar o placar de algum jogo? '),
-        'botaoSair': input('coloque "sair" se quiser sair e "nao" para nao sair: ')
-    }
-    if opcoes['camp'] == 's' and loginAdmfeito == True: 
-        cadastroCamp()
-    if opcoes['cadastro times'] == 's' and loginAdmfeito == True:
-        times()
+# Função de cadastro de jogadora
+def cadastrar_jogadora():
+    global df_jogadoras
+    nome = input("Crie um nome de usuário: ").strip()
+    if nome in df_jogadoras['nome'].values:
+        print("Nome de usuário já existe!")
+        return
+    senha = input("Crie uma senha (min. 4 caracteres): ").strip()
+    if len(senha) < 4:
+        print("Senha muito curta!")
+        return
+    cpf = input("Digite seu CPF: ").strip()
+    idade = int(input("Digite sua idade: "))
+    if idade < 18:
+        print("Você precisa ter 18 anos ou mais!")
+        return
+    # Adiciona jogadora
+    df_jogadoras.loc[len(df_jogadoras)] = [nome, senha, cpf, idade]
+    df_jogadoras.to_csv(CAMINHO_JOGADORAS, index=False)
+    print("Cadastro realizado com sucesso!")
 
-# função de cadastro de campeonato, apenas para administradores
-def cadastroCamp(): 
-    confirma = input('confirme que você quer criar um campeonato(responda com S/n): ')
-    if confirma.lower() == 's' : 
-        nome = input('digite o nome do campeonato: ')
-        #define nome, data, horario e local do campeonato
-        data = input('digite o dia e o mês do evento(exemplo: 22/02/25): ')
-        horario = input('digite o horario do campeonato: ')
-        local = input('digite o local do campeonato: ')
-        jogos[nome] = [data,horario,local]
-        print('Jogo criado com sucesso!')
-        voltarMenu = input('voce quer voltar ao menu(S/n)? ')
-    if voltarMenu.lower() == 's': 
-        menu()
-    else :
-        print('ok, ate logo!')
+# Menu do administrador
+def menu_admin():
+    while True:
+        print("\n=== MENU ADMIN ===")
+        print("1 - Criar campeonato")
+        print("2 - Cadastrar times")
+        print("3 - Lançar placar de jogo")
+        print("4 - Sair")
+        opcao = input("Escolha uma opção: ")
+        if opcao == "1":
+            criar_campeonato()
+        elif opcao == "2":
+            cadastrar_times()
+        elif opcao == "3":
+            lancar_placar()
+        elif opcao == "4":
+            break
+        else:
+            print("Opção inválida!")
 
-#cadastro de times para um campeonato
-def times(): 
-    #o campeonato ja precisa existir
-    nomeDocamp = input('coloque o nome do campeonato aqui: ')
-    nomeTime = input('digite o nome do time: ')
-    time[nomeTime] = []
-    time[nomeTime].append(nomeTime)
-    jogadoras = []
-    for i in range(3):
-        jogadora = input(f'digite o nome da jogadora {i + 1}: ')
-        jogadoras.append(jogadora)
-    time[nomeTime].append(jogadoras)
-    jogos[nomeDocamp] += time[nomeTime]
-    print(jogos)
-    print("time cadastrado com sucesso!")
-    voltarMenu = input('voce quer voltar ao menu(S/n)? ')
-    if voltarMenu.lower() == 's' :
-        menu()
-    else :
-        print('ok, ate logo!')
+# Função criar campeonato
+def criar_campeonato():
+    global df_jogos
+    nome = input("Nome do campeonato: ").strip()
+    data = input("Data (DD/MM/AAAA): ").strip()
+    horario = input("Horário: ").strip()
+    local = input("Local: ").strip()
+    # Adiciona linha com todas as colunas
+    df_jogos.loc[len(df_jogos)] = [nome, data, horario, local, "", ""]
+    df_jogos.to_csv(CAMINHO_JOGOS, index=False)
+    print("Campeonato criado!")
 
-login()
- 
-jg = pd.DataFrame(jogos)
-print(jg)
+# Função cadastrar times
+def cadastrar_times():
+    global df_jogos
+    campeonato = input("Nome do campeonato: ").strip()
+    if campeonato not in df_jogos['campeonato'].values:
+        print("Campeonato não encontrado!")
+        return
+    times = input("Digite os nomes dos times (separados por vírgula): ")
+    df_jogos.loc[df_jogos['campeonato'] == campeonato, 'times'] = times
+    df_jogos.to_csv(CAMINHO_JOGOS, index=False)
+    print("Times cadastrados!")
+
+# Função lançar placar (simples)
+def lancar_placar():
+    global df_jogos
+    campeonato = input("Nome do campeonato: ").strip()
+    if campeonato not in df_jogos['campeonato'].values:
+        print("Campeonato não encontrado!")
+        return
+    placar = input("Digite o placar (ex: 2x1): ").strip()
+    df_jogos.loc[df_jogos['campeonato'] == campeonato, 'placar'] = placar
+    df_jogos.to_csv(CAMINHO_JOGOS, index=False)
+    print("Placar lançado!")
+
+# Menu principal
+def menu_principal():
+    while True:
+        print("\n=== SISTEMA DE FUTEBOL FEMININO ===")
+        print("1 - Login jogadora")
+        print("2 - Login administradora")
+        print("3 - Cadastrar jogadora")
+        print("4 - Sair")
+        opcao = input("Escolha uma opção: ").strip()
+        if opcao == "1":
+            login_jogadora()
+        elif opcao == "2":
+            login_admin()
+        elif opcao == "3":
+            cadastrar_jogadora()
+        elif opcao == "4":
+            print("Saindo...")
+            break
+        else:
+            print("Opção inválida!")
+
+# Inicia programa
+menu_principal()
