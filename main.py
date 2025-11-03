@@ -96,13 +96,14 @@ def menu() :
     opcoes = {
         'camp': input('quer criar um campeonato? '),
         'cadastro times' : input('cadastrar times para um jogo? '),
-        'placar jogo': input('você quer lançar o placar de algum jogo? '),
         'botaoSair': input('coloque "sair" se quiser sair e "nao" para nao sair: ')
     }
     if opcoes['camp'] == 's' and loginAdmfeito == True: 
         cadastroCamp()
     if opcoes['cadastro times'] == 's' and loginAdmfeito == True:
         times()
+    if opcoes['botaoSair'] == 's' and loginAdmfeito == True:
+        sair()
 
 # função de cadastro de campeonato, apenas para administradores
 def cadastroCamp(): 
@@ -141,6 +142,9 @@ def times():
         menu()
     else :
         print('ok, ate logo!')
+    
+def sair():
+    pass
 
 login()
  
