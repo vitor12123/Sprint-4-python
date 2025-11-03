@@ -53,6 +53,7 @@ def login_admin():
         print("❌ Usuário ou senha incorretos.")
         return False
 
+<<<<<<< HEAD
 # Função de cadastro de jogadora
 def cadastrar_jogadora():
     global df_jogadoras
@@ -73,6 +74,21 @@ def cadastrar_jogadora():
     df_jogadoras.loc[len(df_jogadoras)] = [nome, senha, cpf, idade]
     df_jogadoras.to_csv(CAMINHO_JOGADORAS, index=False)
     print("Cadastro realizado com sucesso!")
+=======
+#menu dos admins
+def menu() :
+    opcoes = {
+        'camp': input('quer criar um campeonato? '),
+        'cadastro times' : input('cadastrar times para um jogo? '),
+        'botaoSair': input('coloque "sair" se quiser sair e "nao" para nao sair: ')
+    }
+    if opcoes['camp'] == 's' and loginAdmfeito == True: 
+        cadastroCamp()
+    if opcoes['cadastro times'] == 's' and loginAdmfeito == True:
+        times()
+    if opcoes['botaoSair'] == 's' and loginAdmfeito == True:
+        sair()
+>>>>>>> 49d9f8fddd0b459f1a4f38bc0ab2508e12db6c27
 
 # Menu do administrador
 def menu_admin():
@@ -94,6 +110,7 @@ def menu_admin():
         else:
             print("Opção inválida!")
 
+<<<<<<< HEAD
 # Função criar campeonato
 def criar_campeonato():
     global df_jogos
@@ -105,6 +122,31 @@ def criar_campeonato():
     df_jogos.loc[len(df_jogos)] = [nome, data, horario, local, "", ""]
     df_jogos.to_csv(CAMINHO_JOGOS, index=False)
     print("Campeonato criado!")
+=======
+#cadastro de times para um campeonato
+def times(): 
+    #o campeonato ja precisa existir
+    nomeDocamp = input('coloque o nome do campeonato aqui: ')
+    nomeTime = input('digite o nome do time: ')
+    time[nomeTime] = []
+    time[nomeTime].append(nomeTime)
+    jogadoras = []
+    for i in range(3):
+        jogadora = input(f'digite o nome da jogadora {i + 1}: ')
+        jogadoras.append(jogadora)
+    time[nomeTime].append(jogadoras)
+    jogos[nomeDocamp] += time[nomeTime]
+    print(jogos)
+    print("time cadastrado com sucesso!")
+    voltarMenu = input('voce quer voltar ao menu(S/n)? ')
+    if voltarMenu.lower() == 's' :
+        menu()
+    else :
+        print('ok, ate logo!')
+    
+def sair():
+    pass
+>>>>>>> 49d9f8fddd0b459f1a4f38bc0ab2508e12db6c27
 
 # Função cadastrar times
 def cadastrar_times():
