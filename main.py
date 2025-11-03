@@ -53,19 +53,26 @@ def login_admin():
         print("❌ Usuário ou senha incorretos.")
         return False
 
-#menu dos admins
-def menu() :
-    opcoes = {
-        'camp': input('quer criar um campeonato? '),
-        'cadastro times' : input('cadastrar times para um jogo? '),
-        'botaoSair': input('coloque "sair" se quiser sair e "nao" para nao sair: ')
-    }
-    if opcoes['camp'] == 's' and loginAdmfeito == True: 
-        cadastroCamp()
-    if opcoes['cadastro times'] == 's' and loginAdmfeito == True:
-        times()
-    if opcoes['botaoSair'] == 's' and loginAdmfeito == True:
-        sair()
+# Função de cadastro de jogadora
+def cadastrar_jogadora():
+    global df_jogadoras
+    nome = input("Crie um nome de usuário: ").strip()
+    if nome in df_jogadoras['nome'].values:
+        print("Nome de usuário já existe!")
+        return
+    senha = input("Crie uma senha (min. 4 caracteres): ").strip()
+    if len(senha) < 4:
+        print("Senha muito curta!")
+        return
+    cpf = input("Digite seu CPF: ").strip()
+    idade = int(input("Digite sua idade: "))
+    if idade < 18:
+        print("Você precisa ter 18 anos ou mais!")
+        return
+    # Adiciona jogadora
+    df_jogadoras.loc[len(df_jogadoras)] = [nome, senha, cpf, idade]
+    df_jogadoras.to_csv(CAMINHO_JOGADORAS, index=False)
+    print("Cadastro realizado com sucesso!")
 
 # Menu do administrador
 def menu_admin():
@@ -87,29 +94,17 @@ def menu_admin():
         else:
             print("Opção inválida!")
 
-#cadastro de times para um campeonato
-def times(): 
-    #o campeonato ja precisa existir
-    nomeDocamp = input('coloque o nome do campeonato aqui: ')
-    nomeTime = input('digite o nome do time: ')
-    time[nomeTime] = []
-    time[nomeTime].append(nomeTime)
-    jogadoras = []
-    for i in range(3):
-        jogadora = input(f'digite o nome da jogadora {i + 1}: ')
-        jogadoras.append(jogadora)
-    time[nomeTime].append(jogadoras)
-    jogos[nomeDocamp] += time[nomeTime]
-    print(jogos)
-    print("time cadastrado com sucesso!")
-    voltarMenu = input('voce quer voltar ao menu(S/n)? ')
-    if voltarMenu.lower() == 's' :
-        menu()
-    else :
-        print('ok, ate logo!')
-    
-def sair():
-    pass
+# Função criar campeonato
+def criar_campeonato():
+    global df_jogos
+    nome = input("Nome do campeonato: ").strip()
+    data = input("Data (DD/MM/AAAA): ").strip()
+    horario = input("Horário: ").strip()
+    local = input("Local: ").strip()
+    # Adiciona linha com todas as colunas
+    df_jogos.loc[len(df_jogos)] = [nome, data, horario, local, "", ""]
+    df_jogos.to_csv(CAMINHO_JOGOS, index=False)
+    print("Campeonato criado!")
 
 # Função cadastrar times
 def cadastrar_times():
