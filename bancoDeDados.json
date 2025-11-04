@@ -2,12 +2,12 @@
 "bancoDeDados": {
     "login" : {
             "adm": {
-                "passa a bola": "senha123",
-                "dev": "senhaDev"
+                "0": ["passa a bola", "senha123"],
+                "1": ["dev","senhaDev"]
 
                 }, 
             "jogadoras": {
-                "juliana": "12345"
+                "0": ["juliana","12345"]
                 }
             },
     "jogos": {
